@@ -31,7 +31,7 @@ bash Install\ Certificates.command
 
 Install python dependencies with pip:
 ```
-pip install opencv-python numpy==1.26.4 torch torchvision imgbeddings huggingface_hub==0.24 tflite-support
+pip install opencv-python numpy==1.26.4 torch torchvision imgbeddings huggingface_hub==0.24 tflite-support psycopg2
 ```
 
 ## Running

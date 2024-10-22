@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import numpy as np
+import numpy as np, psycopg2
 import cv2, os, sys, torch, torchvision 
 import torch.nn.functional as nnF
 from torchvision.transforms import functional as F
@@ -147,26 +147,60 @@ def process_image(image_path):
         embedding_numpy = foo_embeddings.cpu().numpy()
         print(embedding_numpy[0], len(embedding_numpy[0]))
 
+        # Convert the embedding to a list
+        embedding_list = embedding_numpy[0].tolist()
+
+        # Format the embedding as a string
+        embedding_str = '[' + ','.join(map(str, embedding_list)) + ']'
+
+        # SQL query
+        insert_query = """
+        INSERT INTO images (filename, embedding, created_at)
+        VALUES (%s, %s, now());
+        """
+
+        # Execute the query
+        cursor.execute(insert_query, (target_file_name, embedding_str))
+
+        # Commit the transaction
+        conn.commit()
+
     # Show or save the image with detections
     image.show()
 
 if __name__ == "__main__":
 
-    #check_gpu_support()
-    #os.environ['TORCH_HOME'] = '/Users/bryant/.cache/torch/hub/checkpoints'
-
-    # Set numpy view options.
-    np.set_printoptions(suppress=True, precision=8, threshold=np.inf)
+    try:
+        # Retrieve the DATABASE_URL environment variable
+        DATABASE_URL = os.getenv('DATABASE_URL')
     
-    # Load the model once
-    model = load_model()
+        if not DATABASE_URL:
+            print("Error: DATABASE_URL environment variable is not set.")
+            sys.exit(1)
 
-    # Optionally move processing to GPU
-    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-    model.to(device)
+        # Establish a connection using the DATABASE_URL
+        conn = psycopg2.connect(DATABASE_URL)
 
-    # Process multiple images in a loop
-    image_paths = sys.argv[1:]
-    for image_path in image_paths:
-        process_image(image_path)
+        # Create a cursor
+        cursor = conn.cursor()
 
+        #check_gpu_support()
+        #os.environ['TORCH_HOME'] = '/Users/bryant/.cache/torch/hub/checkpoints'
+
+        # Set numpy view options.
+        np.set_printoptions(suppress=True, precision=8, threshold=np.inf)
+ 
+        # Load the model once
+        model = load_model()
+
+        # Optionally move processing to GPU
+        device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+        model.to(device)
+
+        # Process multiple images in a loop
+        image_paths = sys.argv[1:]
+        for image_path in image_paths:
+            process_image(image_path)
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
