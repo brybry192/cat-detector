@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
-import os, sys, torch, torchvision 
+import numpy as np
+import cv2, os, sys, torch, torchvision 
+import torch.nn.functional as nnF
 from torchvision.transforms import functional as F
+from tflite_support.task import vision
 from PIL import Image, ImageDraw
 # Load the pre-trained model (using a smaller model for performance)
 from torchvision.models.detection import ssdlite320_mobilenet_v3_large, SSDLite320_MobileNet_V3_Large_Weights
-
 
 #class DetectionOnlyModel(torch.nn.Module):
 #    def __init__(self, model):
@@ -17,7 +19,7 @@ from torchvision.models.detection import ssdlite320_mobilenet_v3_large, SSDLite3
 
 # Use to see what models and weights are available.
 def print_weights():
-    import torchvision.models.detection as models
+    from torchvision import models
     print(dir(models))
 
 # Run to check whether GPU or CPU is unsed for inference processing.
@@ -26,6 +28,39 @@ def check_gpu_support():
         print(f"CUDA is available. GPU device: {torch.cuda.get_device_name(0)}")
     else:
         print("CUDA is not available. Using CPU.")
+
+from torchvision.transforms import functional as F
+
+# Function to extract image embeddings
+def extract_embedding(image_tensor, model):
+    # Get the backbone of the SSD model (MobileNetV3 backbone)
+    backbone = model.backbone
+
+    # Get the feature embeddings from the backbone
+    with torch.no_grad():
+        # Pass the image through the backbone to extract features
+        features = backbone(image_tensor)
+
+        # Extract features from multiple layers
+        features_l1 = features["0"]  # First layer
+        features_l2 = features["1"]  # Second layer
+        features_l3 = features["2"]  # Third layer
+
+        # Apply global average pooling to reduce spatial dimensions (e.g., from 7x7 to 1x1)
+        pooled_l1 = nnF.adaptive_avg_pool2d(features_l1, (1, 1))
+        pooled_l2 = nnF.adaptive_avg_pool2d(features_l2, (1, 1))
+        pooled_l2 = nnF.adaptive_avg_pool2d(features_l3, (1, 1))
+
+        # Flatten the pooled features to get 1D vectors
+        flattened_l1 = pooled_l1.flatten(1)
+        flattened_l2 = pooled_l2.flatten(1)
+        flattened_l3 = pooled_l2.flatten(1)
+
+        # Concatenate the features from different layers
+        embedding = torch.cat([flattened_l1, flattened_l2, flattened_l3], dim=1)
+
+    return embedding
+
 
 # Other object detection models tried:
 #     - fasterrcnn_mobilenet_v3_large_fpn     (Faster R-CNN with MobileNet backbone)
@@ -73,7 +108,6 @@ def process_image(image_path):
     with torch.no_grad():
         predictions = model([image_tensor])
 
-
     # Move predictions to CPU if necessary
     predictions = [{k: v.to('cpu') for k, v in t.items()} for t in predictions]
     
@@ -90,17 +124,39 @@ def process_image(image_path):
     
     # Draw bounding boxes on the image
     draw = ImageDraw.Draw(image)
-    for box in cat_boxes:
+    for i, box in enumerate(cat_boxes):
+        # Draw red bounding box around each detected cat.
         draw.rectangle(box.tolist(), outline='red', width=3)
-    
+        # Crop out each cat detected and create a new image.
+        left, top, right, bottom = box.tolist()
+        cropped_image = image.crop((left, top, right, bottom))
+        target_file_name = image_path.replace(".jpg", f"-cropped-{i}.jpg")
+        cropped_image.save(target_file_name)
+        cropped_image_tensor = F.to_tensor(cropped_image).to(device).unsqueeze(0)
+
+        # Create an ImageEmbedder instance
+        image_embedder = vision.ImageEmbedder.create_from_file("./models/mobilenet_v3_large.tflite")
+        # Generate the embedding with TensorFlow MobileNetV3 SSD
+        embedding = image_embedder.embed(vision.TensorImage.create_from_file(target_file_name))
+        # Generate the embedding by extracting from pytorch backbone and pulling the
+        # fearure maps directly from different layers of the image.
+        # pgvector has 2000 limit on standard dimensions so we have to flatten to reduce.
+        print(embedding.embeddings[0].feature_vector.value, len(embedding.embeddings[0].feature_vector.value))
+
+        foo_embeddings = extract_embedding(cropped_image_tensor, model)
+        embedding_numpy = foo_embeddings.cpu().numpy()
+        print(embedding_numpy[0], len(embedding_numpy[0]))
+
     # Show or save the image with detections
     image.show()
-    #image.save('cat_detection_output.jpg')
 
 if __name__ == "__main__":
 
     #check_gpu_support()
     #os.environ['TORCH_HOME'] = '/Users/bryant/.cache/torch/hub/checkpoints'
+
+    # Set numpy view options.
+    np.set_printoptions(suppress=True, precision=8, threshold=np.inf)
     
     # Load the model once
     model = load_model()

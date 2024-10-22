@@ -16,17 +16,23 @@ python3 -m venv python-env
 
 ## Activate python-env
 
-To active the python-env:
+Activate the python-env before doing setup or running script::
 ```
 source python-env/bin/activate
 ```
 
-## Install dependencies with pip
+## Install Dependencies
 
+Install python certificates for os version:
 ```
-pip install opencv-python numpy==1.26.4 torch torchvision
+cd /Applications/Python\ 3.11/
+bash Install\ Certificates.command
 ```
 
+Install python dependencies with pip:
+```
+pip install opencv-python numpy==1.26.4 torch torchvision imgbeddings huggingface_hub==0.24 tflite-support
+```
 
 ## Running
 
