@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: postgres_pgvector
+    environment:
+      POSTGRES_USER: postgres      
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: image_db        # The initial database to create
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Initial SQL script to set up the DB
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+
