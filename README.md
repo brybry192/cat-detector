@@ -97,7 +97,7 @@ Steps used to train custom model:
  - Add my own set of tabby cat validation images without bounding box into data/val
  - Run cat_breed_train.py to train custom model
 
-Use `go run cat_detector.go -i images/ to generate new images in the same directory with a bounding box drawn around the detected cat. Here's an example using images/IMG_9326_beastie.jpg
+Use `go run cat_detector.go -i images/` to generate new images in the same directory with a bounding box drawn around the detected cat. Here's an example using images/IMG_9326_beastie.jpg
 ```
 (python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ go run cat_detector.go -i images/IMG_9326_beastie.jpg
 Processing: images/IMG_9326_beastie.jpg
