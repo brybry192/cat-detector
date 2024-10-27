@@ -6,6 +6,7 @@ import (
 	"image"
 	"image/draw"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -29,7 +30,7 @@ func CropImage(img image.Image, box image.Rectangle) image.Image {
 
 func main() {
 	// Set up a flag to pass the directory, leaving Go to handle the glob pattern
-	dir := flag.String("i", "images", "Directory containing jpg images")
+	imgPath := flag.String("i", "images", "Image path or directory containing jpg images")
 	flag.Parse()
 
 	// Initialize the model
@@ -47,13 +48,24 @@ func main() {
 		}
 	}()
 
-	// Use filepath.Join to create the glob pattern within the program
-	pattern := filepath.Join(*dir, "*.jpg")
-
-	// Get all files matching the glob pattern.
-	files, err := filepath.Glob(pattern)
+	// Check if the path is a directory or file.
+	statInfo, err := os.Stat(*imgPath)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error accessing path: %v", err)
+	}
+
+	var files []string
+	if statInfo.IsDir() {
+		// If it's a directory, use a glob to find .jpg files
+		pattern := filepath.Join(*imgPath, "*.jpg")
+		files, err = filepath.Glob(pattern)
+		if err != nil {
+			log.Fatalf("Error finding .jpg files: %v", err)
+		}
+	}
+
+	if !statInfo.IsDir() {
+		files = append(files, *imgPath)
 	}
 
 	// Loop over each file and process it

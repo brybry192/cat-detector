@@ -2,9 +2,15 @@
 
 Detect a specific cat or cat breed using PyTorch.
 
-We have two indoor cats that each have their own space, in addition to many shared spaces. Beastie is an orange and white stripped Tabby. Mac is a pure black America Shorthair cat. Beastie has a sneaky habit and likes to go into Mac's space some times, which creates tension between them and has resulted in spraying a few times. To help prevent, I'd like to detect when Beastie is in the garage. However, Mac is allowed. The goal is to notify when a tabby is detected only from security camera.
+We have two indoor cats in our household. Beastie is an orange and white stripped Tabby:
+![Beastie](images/IMG_9326_beastie.jpg)
 
-For now I'm just working on the image detection piece using jpg images.
+Mac is a pure black America Shorthair cat:
+![Mac](images/IMG_3616_mac.jpg)
+
+They each have their own space, in addition to many shared spaces across the house. Beastie has a sneaky habit of going into Mac's space sometimes, which creates tension between them and has resulted in spraying a few times. To help prevent, I'd like to detect when Beastie is in a room he shouldn't be in. However, Mac is allowed. The goal is to notify when a tabby is detected only from security camera frames.
+
+For now I'm just working on the image detection piece using jpg images. This is just an excuse to explore and play with deep learning models for object detection using pytorch and different libraries across Python and Go.
 
   - [Setup Virtual Python Environment](#setup-virtual-python-environment)
   - [Activate python-env](#activate-python-env)
@@ -18,6 +24,7 @@ For now I'm just working on the image detection piece using jpg images.
 
 Install dependencies and create python environment for this repo:
 ```
+
 mkdir models
 brew install pyenv
 pyenv versions
@@ -77,7 +84,7 @@ ls -l ~/git/github.com/opencv/opencv/data/haarcascades/haarcascade_frontalcatfac
 
 /home/bryant/git/github.com/opencv/opencv/data/haarcascades/haarcascade_frontalcatface.xml
 
-### Training Custom Model
+## Training Custom Model
 
 Steps used to train custom model:
  - Download the images.tar.gz data set for cats and associated annotations.tar.gz from https://www.robots.ox.ac.uk/~vgg/data/pets/
@@ -89,6 +96,16 @@ Steps used to train custom model:
  - Copy some of the original images (no bounding box) across breeds from data/images/ into data/val/
  - Add my own set of tabby cat validation images without bounding box into data/val
  - Run cat_breed_train.py to train custom model
+
+Use `go run cat_detector.go -i images/ to generate new images in the same directory with a bounding box drawn around the detected cat. Here's an example using images/IMG_9326_beastie.jpg
+```
+(python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ go run cat_detector.go -i images/IMG_9326_beastie.jpg
+Processing: images/IMG_9326_beastie.jpg
+Box 1 detected class ID 15 for cat at (180,357)-(3961,2593) with confidence 0.99073535
+```
+
+That generates images/IMG_9326_beastie_detected.jpg, which includes a blue bounded box around where the cat was detected in the image.:
+![Beastie with Bounded Box](images/IMG_9326_beastie_detected.jpg)
 
 
 Example training run:
