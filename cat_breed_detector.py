@@ -3,14 +3,20 @@
 
 import argparse, glob, os, torch
 import torch.nn.functional as F
+import torch.nn as nn
 from torchvision import models, transforms
 from PIL import Image
 from cat_breed_dataset import CatDataset
 
+# Initialize weights for new layers only
+def initialize_weights(m):
+    if isinstance(m, nn.Linear):
+        nn.init.kaiming_normal_(m.weight)
+        if m.bias is not None:
+            nn.init.constant_(m.bias, 0)
+
 # Function to predict if a tabby cat is in the image.
 def predict_image(image_path, threshold):
-    # Define your class names in the same order as your model’s output
-    class_names = dataset.classes
 
     # Load the image and apply transformations
     image = Image.open(image_path).convert('RGB')
@@ -32,27 +38,30 @@ def predict_image(image_path, threshold):
     else:
         print(f"Cat not detected in {image_path} with probability {confidence:.2f}")
 
-
+class_names = [
+        'Abyssinian', 'American_Shorthair', 'Bengal', 'Bombay', 'British_Shorthair',
+        'Exotic_Shorthair', 'Maine_Coon', 'Persian', 'Ragdoll', 'Russian_Blue',
+        'Scottish_Fold', 'Siamese', 'Sphynx', 'Tabby', 'Unknown'
+]
 
 # Set up argument parser that can be used to define paths used for directories.
 parser = argparse.ArgumentParser(description="Detect the cat breed(s) in images.")
-parser.add_argument("--train_dir", default="data/train", type=str, help="Directory path with jpg images used for training.")
 parser.add_argument("--confidence", default=0.65, type=float, help="The confidence threshold for detecting cat breed or not cat in the image.")
-parser.add_argument("--val_dir", default="data/val", type=str, help="Directory path with jpg images used for validation.")
-parser.add_argument("--annotations_dir", default="data/annotations/xml", type=str, help="Directory path xml annotations.")
 parser.add_argument("--model_path", default="models/cat_breed_resnet50.pth", type=str, help="Path to the modele file with custom weights for breed detection.")
 parser.add_argument("input_path", default="images", type=str, help="Path to jpg image or a directory of images.")
 args = parser.parse_args()
 
 # Load the dataset to determine the number of classes
-dataset = CatDataset(root_dir=args.train_dir, annotations_dir=args.annotations_dir)
-num_classes = len(dataset.classes)  # Dynamically set number of classes based on dataset
-
+num_classes = len(class_names)  # Dynamically set number of classes based on dataset
 
 # Define the base model architecture and structure.
 model = models.resnet50(weights=None)
-model.fc = torch.nn.Linear(model.fc.in_features, num_classes)
-
+#model.fc = torch.nn.Linear(model.fc.in_features, num_classes)
+model.fc = nn.Sequential(
+    nn.Dropout(p=0.3),
+    nn.Linear(model.fc.in_features, len(class_names))
+)
+model.fc[1].apply(initialize_weights)
 
 # Support GPU cuda use if available on system.
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
