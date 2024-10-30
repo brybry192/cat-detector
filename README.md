@@ -228,6 +228,8 @@ cat detected in images/Bengal_101.jpg with probability 0.76
 cat detected in images/Bombay_101.jpg with probability 0.98
 cat detected in images/British_Shorthair_101.jpg with probability 0.99
 cat detected in images/IMG_3616_mac.jpg with probability 0.83
+cat detected in images/Mac_IMG_0875.jpg with probability 0.94
+cat detected in images/Mac_IMG_0889.jpg with probability 1.00
 cat detected in images/Maine_Coon_101.jpg with probability 0.98
 cat detected in images/Persian_101.jpg with probability 1.00
 cat detected in images/Plants_IMG_3447_detected.jpg with probability 0.49
@@ -263,6 +265,7 @@ tabby_cat detected in images/IMG_0359.jpg with probability 1.00
 tabby_cat detected in images/IMG_0366_beastie-cropped-0.jpg with probability 0.64
 tabby_cat detected in images/IMG_0366_beastie_detected.jpg with probability 1.00
 tabby_cat detected in images/IMG_0366_beastie.jpg with probability 1.00
+tabby_cat detected in images/IMG_0718_beastie.jpg with probability 1.00
 tabby_cat detected in images/IMG_0718_detected.jpg with probability 1.00
 tabby_cat detected in images/IMG_0718.jpg with probability 1.00
 tabby_cat detected in images/IMG_9326_beastie_detected.jpg with probability 1.00
@@ -287,6 +290,7 @@ American_Shorthair detected in images/IMG_0359.jpg with probability 1.00
 American_Shorthair detected in images/IMG_0366_beastie-cropped-0.jpg with probability 0.96
 American_Shorthair detected in images/IMG_0366_beastie_detected.jpg with probability 0.99
 American_Shorthair detected in images/IMG_0366_beastie.jpg with probability 1.00
+American_Shorthair detected in images/IMG_0718_beastie.jpg with probability 1.00
 American_Shorthair detected in images/IMG_0718_detected.jpg with probability 1.00
 American_Shorthair detected in images/IMG_0718.jpg with probability 1.00
 American_Shorthair detected in images/IMG_9326_beastie_detected.jpg with probability 1.00
@@ -306,6 +310,8 @@ No_Cat detected in images/english_cocker_spaniel_18.jpg with probability 1.00
 No_Cat detected in images/english_setter_31.jpg with probability 1.00
 No_Cat detected in images/great_pyrenees_143.jpg with probability 1.00
 No_Cat detected in images/keeshond_134.jpg with probability 1.00
+No_Cat detected in images/Mac_IMG_0875.jpg with probability 0.97
+No_Cat detected in images/Mac_IMG_0889.jpg with probability 0.95
 No_Cat detected in images/nature_IMG_9026.jpg with probability 1.00
 No_Cat detected in images/nature_IMG_9032.jpg with probability 1.00
 No_Cat detected in images/nature_IMG_9062.jpg with probability 1.00
@@ -322,5 +328,7 @@ Persian detected in images/Persian_101.jpg with probability 0.96
 Ragdoll detected in images/Ragdoll_101.jpg with probability 1.00
 Russian_Blue detected in images/Russian_Blue_101.jpg with probability 1.00
 Siamese detected in images/Siamese_101.jpg with probability 1.00
-
 ```
+
+
+
