@@ -17,11 +17,12 @@ class CatDataset(Dataset):
 
         # Convert all labels to strings to avoid sorting errors
         self.labels = [str(label) for label in self.labels]
-        self.classes = sorted(list(set(self.labels)) + ["Unknown"])  # Ensure "Unknown" is included in classes
+        self.classes = sorted(list(set(self.labels)))
 
         # Check number of occurrences of each label.
         if debug:
             label_counts = Counter(self.labels)
+            print(f"class_names = {self.classes}")
             print(f"Class Distribution: {label_counts}")
 
     def load_image_paths_and_labels(self):
@@ -37,12 +38,16 @@ class CatDataset(Dataset):
                     image_paths.append(file_path)
 
                     # Extract breed name based on capitalized parts of filename
-                    breed_name = self.extract_breed_name(img_name)
-                    labels.append(breed_name)
+                    #breed_name = self.extract_breed_name_from_img_name(img_name)
+
+                    # Use the parent directory name as label.
+                    label = os.path.basename(root)
+                    labels.append(label)
 
         return image_paths, labels
 
-    def extract_breed_name(self, img_name):
+
+    def extract_breed_name_from_img_name(self, img_name):
         # Split the filename and extract parts that start with a capital letter
         parts = img_name.split('_')
         breed_name_parts = [part for part in parts if part and part[0].isupper()]
@@ -94,17 +99,17 @@ class CatDataset(Dataset):
 
         # Parse bounding boxes if XML exists
         #print(f"XML file found for {xml_path}")
-        boxes = self.parse_xml(xml_path, width, height)
+        #boxes = self.parse_xml(xml_path, width, height)
 
         # Convert boxes to a fixed-size tensor for batching
-        max_boxes = 5  # Set this based on expected max number of boxes per image
-        padded_boxes = torch.zeros((max_boxes, 4))
-        for i, box in enumerate(boxes[:max_boxes]):
-            padded_boxes[i] = torch.tensor(box)
+        #max_boxes = 5  # Set this based on expected max number of boxes per image
+        #padded_boxes = torch.zeros((max_boxes, 4))
+        #for i, box in enumerate(boxes[:max_boxes]):
+        #    padded_boxes[i] = torch.tensor(box)
 
 
         if self.transform:
             image = self.transform(image)
 
-        return image, label, padded_boxes
+        return image, label # , padded_boxes
 
