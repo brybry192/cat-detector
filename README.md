@@ -219,41 +219,55 @@ Model saved as models/cat_breed_classification_resnet50.pth
 
 ## Running Cat Detection
 
+![images](images/images-preview.png)
+
 Running tabby_detection.py:
 ```
-
-(python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ ./tabby_detector.py --model_path models/tabby_cat_resnet50.pth images/
-no_cat detected in images/english_setter_31.jpg with probability 1.00
-tabby_cat detected in images/IMG_0359.jpg with probability 1.00
-cat detected in images/Plants_IMG_3447_detected.jpg with probability 0.49
-tabby_cat detected in images/IMG_0359_beastie_detected.jpg with probability 1.00
-tabby_cat detected in images/IMG_0359_detected.jpg with probability 1.00
-no_cat detected in images/scottish_terrier_183.jpg with probability 0.99
-no_cat detected in images/Beach_IMG_0699_detected.jpg with probability 1.00
-tabby_cat detected in images/IMG_0718_detected.jpg with probability 1.00
-tabby_cat detected in images/IMG_0359_beastie.jpg with probability 1.00
-no_cat detected in images/keeshond_134.jpg with probability 1.00
-tabby_cat detected in images/IMG_0366_beastie-cropped-0.jpg with probability 0.64
-no_cat detected in images/newfoundland_1.jpg with probability 1.00
-tabby_cat detected in images/IMG_9326_beastie_detected.jpg with probability 1.00
+(python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ ./tabby_detector.py images/ | sort
+cat detected in images/Bengal_101.jpg with probability 0.76
+cat detected in images/Bombay_101.jpg with probability 0.98
+cat detected in images/British_Shorthair_101.jpg with probability 0.99
 cat detected in images/IMG_3616_mac.jpg with probability 0.83
-no_cat detected in images/Blue_heron_IMG_0738_detected.jpg with probability 0.73
-no_cat detected in images/yorkshire_terrier_14.jpg with probability 0.95
-tabby_cat detected in images/IMG_0366_beastie_detected.jpg with probability 1.00
-no_cat detected in images/pug_107.jpg with probability 1.00
-no_cat detected in images/Beach_IMG_0704.jpg with probability 0.99
-tabby_cat detected in images/IMG_0718.jpg with probability 1.00
-tabby_cat detected in images/IMG_9326_beastie.jpg with probability 1.00
-no_cat detected in images/english_cocker_spaniel_18.jpg with probability 1.00
-no_cat detected in images/great_pyrenees_143.jpg with probability 1.00
-no_cat detected in images/Beach_IMG_0704_detected.jpg with probability 0.99
-no_cat detected in images/Plants_IMG_3447.jpg with probability 0.57
+cat detected in images/Maine_Coon_101.jpg with probability 0.98
+cat detected in images/Persian_101.jpg with probability 1.00
+cat detected in images/Plants_IMG_3447_detected.jpg with probability 0.49
+cat detected in images/Ragdoll_101.jpg with probability 1.00
+cat detected in images/Russian_Blue_101.jpg with probability 1.00
+cat detected in images/Siamese_101.jpg with probability 0.99
+no_cat detected in images/Beach_IMG_0699_detected.jpg with probability 1.00
 no_cat detected in images/Beach_IMG_0699.jpg with probability 1.00
-tabby_cat detected in images/IMG_0366_beastie.jpg with probability 1.00
+no_cat detected in images/Beach_IMG_0704_detected.jpg with probability 0.99
+no_cat detected in images/Beach_IMG_0704.jpg with probability 0.99
+no_cat detected in images/Blue_heron_IMG_0738_detected.jpg with probability 0.73
 no_cat detected in images/Blue_heron_IMG_0738.jpg with probability 0.70
+no_cat detected in images/english_cocker_spaniel_18.jpg with probability 1.00
+no_cat detected in images/english_setter_31.jpg with probability 1.00
+no_cat detected in images/great_pyrenees_143.jpg with probability 1.00
+no_cat detected in images/keeshond_134.jpg with probability 1.00
+no_cat detected in images/nature_IMG_9026.jpg with probability 1.00
+no_cat detected in images/nature_IMG_9032.jpg with probability 0.99
+no_cat detected in images/nature_IMG_9062.jpg with probability 1.00
+no_cat detected in images/nature_IMG_9079.jpg with probability 1.00
+no_cat detected in images/newfoundland_1.jpg with probability 1.00
+no_cat detected in images/Plants_IMG_3447.jpg with probability 0.57
+no_cat detected in images/pug_107.jpg with probability 1.00
+no_cat detected in images/scottish_terrier_183.jpg with probability 0.99
+no_cat detected in images/shiba_inu_186.jpg with probability 0.99
 no_cat detected in images/wheaten_terrier_111.jpg with probability 0.99
+no_cat detected in images/yorkshire_terrier_14.jpg with probability 0.95
+tabby_cat detected in images/Abyssinian_101.jpg with probability 0.62
+tabby_cat detected in images/IMG_0359_beastie_detected.jpg with probability 1.00
+tabby_cat detected in images/IMG_0359_beastie.jpg with probability 1.00
+tabby_cat detected in images/IMG_0359_detected.jpg with probability 1.00
+tabby_cat detected in images/IMG_0359.jpg with probability 1.00
+tabby_cat detected in images/IMG_0366_beastie-cropped-0.jpg with probability 0.64
+tabby_cat detected in images/IMG_0366_beastie_detected.jpg with probability 1.00
+tabby_cat detected in images/IMG_0366_beastie.jpg with probability 1.00
+tabby_cat detected in images/IMG_0718_detected.jpg with probability 1.00
+tabby_cat detected in images/IMG_0718.jpg with probability 1.00
+tabby_cat detected in images/IMG_9326_beastie_detected.jpg with probability 1.00
+tabby_cat detected in images/IMG_9326_beastie.jpg with probability 1.00
 ```
-
 
 Using `./cat_breed_detector.py` with the default model at `./models/cat_breed_classification_resnet50.pth` on some test images to see the results:
 ```
@@ -264,35 +278,49 @@ Using `./cat_breed_detector.py` with the default model at `./models/cat_breed_cl
 usage: cat_breed_detector.py [-h] [--confidence CONFIDENCE] [--model_path MODEL_PATH] input_path
 cat_breed_detector.py: error: the following arguments are required: input_path
 
-(python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ ./cat_breed_detector.py images/
-No_Cat detected in images/english_setter_31.jpg with probability 1.00
-American_Shorthair detected in images/IMG_0359.jpg with probability 1.00
-No_Cat detected in images/Plants_IMG_3447_detected.jpg with probability 0.98
+(python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ ./cat_breed_detector.py images/ | sort
+Abyssinian detected in images/Abyssinian_101.jpg with probability 0.79
 American_Shorthair detected in images/IMG_0359_beastie_detected.jpg with probability 1.00
-American_Shorthair detected in images/IMG_0359_detected.jpg with probability 1.00
-No_Cat detected in images/scottish_terrier_183.jpg with probability 1.00
-No_Cat detected in images/Beach_IMG_0699_detected.jpg with probability 1.00
-American_Shorthair detected in images/IMG_0718_detected.jpg with probability 1.00
 American_Shorthair detected in images/IMG_0359_beastie.jpg with probability 1.00
-No_Cat detected in images/keeshond_134.jpg with probability 1.00
+American_Shorthair detected in images/IMG_0359_detected.jpg with probability 1.00
+American_Shorthair detected in images/IMG_0359.jpg with probability 1.00
 American_Shorthair detected in images/IMG_0366_beastie-cropped-0.jpg with probability 0.96
-No_Cat detected in images/newfoundland_1.jpg with probability 1.00
-American_Shorthair detected in images/IMG_9326_beastie_detected.jpg with probability 1.00
-Bombay detected in images/IMG_3616_mac.jpg with probability 0.94
-No_Cat detected in images/Blue_heron_IMG_0738_detected.jpg with probability 0.78
-No_Cat detected in images/yorkshire_terrier_14.jpg with probability 1.00
 American_Shorthair detected in images/IMG_0366_beastie_detected.jpg with probability 0.99
-No_Cat detected in images/pug_107.jpg with probability 1.00
-No_Cat detected in images/Beach_IMG_0704.jpg with probability 1.00
-American_Shorthair detected in images/IMG_0718.jpg with probability 1.00
-American_Shorthair detected in images/IMG_9326_beastie.jpg with probability 1.00
-No_Cat detected in images/english_cocker_spaniel_18.jpg with probability 1.00
-No_Cat detected in images/great_pyrenees_143.jpg with probability 1.00
-No_Cat detected in images/Beach_IMG_0704_detected.jpg with probability 1.00
-No_Cat detected in images/Plants_IMG_3447.jpg with probability 0.97
-No_Cat detected in images/Beach_IMG_0699.jpg with probability 1.00
 American_Shorthair detected in images/IMG_0366_beastie.jpg with probability 1.00
+American_Shorthair detected in images/IMG_0718_detected.jpg with probability 1.00
+American_Shorthair detected in images/IMG_0718.jpg with probability 1.00
+American_Shorthair detected in images/IMG_9326_beastie_detected.jpg with probability 1.00
+American_Shorthair detected in images/IMG_9326_beastie.jpg with probability 1.00
+Bengal detected in images/Bengal_101.jpg with probability 0.96
+Bombay detected in images/Bombay_101.jpg with probability 0.98
+Bombay detected in images/IMG_3616_mac.jpg with probability 0.94
+British_Shorthair detected in images/British_Shorthair_101.jpg with probability 1.00
+Maine_Coon detected in images/Maine_Coon_101.jpg with probability 1.00
+No_Cat detected in images/Beach_IMG_0699_detected.jpg with probability 1.00
+No_Cat detected in images/Beach_IMG_0699.jpg with probability 1.00
+No_Cat detected in images/Beach_IMG_0704_detected.jpg with probability 1.00
+No_Cat detected in images/Beach_IMG_0704.jpg with probability 1.00
+No_Cat detected in images/Blue_heron_IMG_0738_detected.jpg with probability 0.78
 No_Cat detected in images/Blue_heron_IMG_0738.jpg with probability 0.88
-No_Cat detected in images/wheaten_terrier_111.jpg with probability 1.00
+No_Cat detected in images/english_cocker_spaniel_18.jpg with probability 1.00
+No_Cat detected in images/english_setter_31.jpg with probability 1.00
+No_Cat detected in images/great_pyrenees_143.jpg with probability 1.00
+No_Cat detected in images/keeshond_134.jpg with probability 1.00
+No_Cat detected in images/nature_IMG_9026.jpg with probability 1.00
+No_Cat detected in images/nature_IMG_9032.jpg with probability 1.00
+No_Cat detected in images/nature_IMG_9062.jpg with probability 1.00
+No_Cat detected in images/nature_IMG_9079.jpg with probability 1.00
+No_Cat detected in images/newfoundland_1.jpg with probability 1.00
+No_Cat detected in images/Plants_IMG_3447_detected.jpg with probability 0.98
+No_Cat detected in images/Plants_IMG_3447.jpg with probability 0.97
+No_Cat detected in images/pug_107.jpg with probability 1.00
+No_Cat detected in images/scottish_terrier_183.jpg with probability 1.00
 No_Cat detected in images/shiba_inu_186.jpg with probability 1.00
+No_Cat detected in images/wheaten_terrier_111.jpg with probability 1.00
+No_Cat detected in images/yorkshire_terrier_14.jpg with probability 1.00
+Persian detected in images/Persian_101.jpg with probability 0.96
+Ragdoll detected in images/Ragdoll_101.jpg with probability 1.00
+Russian_Blue detected in images/Russian_Blue_101.jpg with probability 1.00
+Siamese detected in images/Siamese_101.jpg with probability 1.00
+
 ```
