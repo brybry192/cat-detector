@@ -86,13 +86,15 @@ ls -l ~/git/github.com/opencv/opencv/data/haarcascades/haarcascade_frontalcatfac
 
 High level steps used to train custom model:
  - Download the images.tar.gz data set for cats and associated annotations.tar.gz from https://www.robots.ox.ac.uk/~vgg/data/pets/
+ - Download other cat breeds from https://github.com/BPhanuphong/Cat-breed-images-classification.git
  - mkdir -p data/{train,val} && cd data && tar -xzf {images,annotations}.tar.gz
- - Removed the dog images: `rm -f data/images/[a-z]*.jpg`
+ - Moved dog images (lowercase) into No_Cat directories
  - Use cat_detector.go to preprocess the images and detect cat with bounding box: `go run cat_detector.go -i data/images`
  - Move bounding box images into data/train/
- - Add my own set of tabby cat detected images into data/train/
+ - Add my own set of tabby cat, cat, animal and nature photos into the mix
  - Copy some of the original images (no bounding box) across breeds from data/images/ into data/val/
- - Add my own set of tabby cat validation images without bounding box into data/val
+ - Add my own set of tabby cat, cat and no cat validation images without bounding box into data/val
+ - Create cat breed directories for each cat breed and copy photos into them
  - Run cat_breed_train.py to train custom model
 
 
