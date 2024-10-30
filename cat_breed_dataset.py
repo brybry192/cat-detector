@@ -38,15 +38,14 @@ class CatDataset(Dataset):
                     image_paths.append(file_path)
 
                     # Extract breed name based on capitalized parts of filename
-                    breed_name = self.extract_breed_name(img_name)
-                    labels.append(breed_name)
+                    #breed_name = self.extract_breed_name_from_img_name(img_name)
 
-                    # Extract breed label from the parent directory name.
-                    breed_name = self.
+                    # Use the parent directory name as label.
+                    label = os.path.basename(root)
+                    labels.append(label)
 
         return image_paths, labels
 
-    def extrac_breed_name_from_parent_dir(self, file):
 
     def extract_breed_name_from_img_name(self, img_name):
         # Split the filename and extract parts that start with a capital letter

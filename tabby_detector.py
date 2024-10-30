@@ -33,22 +33,15 @@ def predict_image(image_path, threshold):
     confidence = probabilities[0][predicted_class.item()].item()
 
     # Report cat breed when confidence in detection is high enough.
-    print(f"{predicted_class_name} detected in {image_path} with probability {confidence:.2f}")
-    #if confidence > threshold:
-    #    print(f"{predicted_class_name} detected in {image_path} with probability {confidence:.2f}")
-    #else:
-    #    print(f"Cat not detected in {image_path} with probability {confidence:.2f}")
+    if confidence > threshold:
+        print(f"{predicted_class_name} detected in {image_path} with probability {confidence:.2f}")
 
-class_names = [
-        'Abyssinian', 'American_Shorthair', 'Bengal', 'Bombay', 'British_Shorthair',
-        'Exotic_Shorthair', 'Maine_Coon', 'No_Cat', 'Persian', 'Ragdoll', 'Russian_Blue',
-        'Scottish_Fold', 'Siamese', 'Sphynx'
-]
+class_names = [ 'cat', 'no_cat', 'tabby_cat' ]
 
 # Set up argument parser that can be used to define paths used for directories.
 parser = argparse.ArgumentParser(description="Detect the cat breed(s) in images.")
-parser.add_argument("--confidence", default=0.50, type=float, help="The confidence threshold for detecting cat breed or not cat in the image.")
-parser.add_argument("--model_path", default="models/cat_breed_classification_resnet50.pth", type=str, help="Path to the modele file with custom weights for breed detection.")
+parser.add_argument("--confidence", default=0.10, type=float, help="The confidence threshold for showing detected tabby, cat or not cat.")
+parser.add_argument("--model_path", default="models/tabby_vs_non_tabby_resnet50.pth", type=str, help="Path to the modele file with custom weights for breed detection.")
 parser.add_argument("input_path", default="images", type=str, help="Path to jpg image or a directory of images.")
 args = parser.parse_args()
 

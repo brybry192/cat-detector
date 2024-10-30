@@ -16,6 +16,7 @@ from torchvision.transforms import v2
 
 # Set up argument parser that can be used to define paths used for training, validation and annotations.
 parser = argparse.ArgumentParser(description="Detect the cat breed(s) in images.")
+parser.add_argument("--epochs", default=10, type=int, help="The number of epochs for training and validation.")
 parser.add_argument("--train_dir", default="data/train", type=str, help="Directory path with jpg images used for training.")
 parser.add_argument("--val_dir", default="data/val", type=str, help="Directory path with jpg images used for validation.")
 parser.add_argument("--annotations_dir", default="data/annotations/xmls", type=str, help="Directory path with the matching xml annotations used for training.")
@@ -36,13 +37,14 @@ data_transforms = {
         #v2.RandomAffine(degrees=15, translate=(0.1, 0.1), shear=10),  # Random affine transform
         #v2.RandomPerspective(distortion_scale=0.5, p=0.5),            # Perspective distortion
         #v2.RandomErasing(p=0.5, scale=(0.02, 0.2), ratio=(0.3, 3.3)), # Random erasing
-        v2.ToTensor(),
-        #v2.ToDtype(torch.float32, scale=True),  # Normalize expects float input
+        v2.ToImage(),
+        v2.ToDtype(torch.float32, scale=True),  # Normalize expects float input
         v2.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),  # Normalize as per ImageNet
     ]),
     'val': v2.Compose([
         v2.Resize((224, 224)),  # Resize to a consistent size for validation
-        v2.ToTensor(),
+        v2.ToImage(),
+        v2.ToDtype(torch.float32, scale=True),
         v2.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
     ]),
 }
@@ -79,9 +81,9 @@ model.fc = nn.Sequential(
 model = model.to(device)
 # Set up the loss function and optimizer.
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.8)  # Initial learning rate
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)  # Initial learning rate
 scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=3)
-num_epochs = 10
+num_epochs = args.epochs
 
 training_start = time.time()
 print(f"Starting training on {device}\n")
