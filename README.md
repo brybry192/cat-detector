@@ -98,7 +98,7 @@ High level steps used to train custom model:
 
 Evolved to use parent directory for the label to attach to photos. Created data/{train,val}/tabby_vs_no_tabby parent folder to house sub directories that will make up each photo category. Each subdirectory created under data/{train,val}/tabby_vs_no_tabby is used to automatically label the photos within it for the model. So the photo should should represent directory name in some way and be organized along that type boundry. For tabby cat vs not I created `data/{train,val}/tabby_vs_no_tabby/tabby` and `data/{train,val}/tabby_vs_no_tabby/no_tabby`. Then photos of cats that had a tabby pattern were placed in data/{train,val}/tabby_vs_no_tabby/tabby and those without tabby pattern were placed in data/{train,val}/tabby_vs_no_tabby/no_tabby. Make sure to differ the sets of pictures in train folder vs val and don't duplicate between them. The photos in train sub dirs should include bounding boxes around the object to train on (tabby cat in this case), but the photos in the val sub directories shouldn't include bounding box.
 
-Example of the directory structure for tabby vs no tabby:
+Directory structure for tabby vs no tabby:
 ```
 (python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ ls -lhtr data/{train,val}/tabby_cat/
 data/train/tabby_cat/:
@@ -114,6 +114,45 @@ drwxr-xr-x 2 bryant bryant  12K Oct 29 13:43 cat
 drwxr-xr-x 2 bryant bryant 4.0K Oct 29 16:31 no_cat
 ```
 
+Directory structure for cat breeds:
+```
+(python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ ls -lhtr data/{train,val}/cat_breed_classification/
+data/train/cat_breed_classification/:
+total 224K
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Abyssinian
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Bengal
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Bombay
+drwxr-xr-x 2 bryant bryant 20K Oct 29 14:08 British_Shorthair
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Exotic_Shorthair
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Maine_Coon
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Persian
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Ragdoll
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Russian_Blue
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Scottish_Fold
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Siamese
+drwxr-xr-x 2 bryant bryant 12K Oct 29 14:08 Sphynx
+drwxr-xr-x 2 bryant bryant 20K Oct 29 14:11 American_Shorthair
+drwxr-xr-x 2 bryant bryant 52K Oct 29 16:57 No_Cat
+
+data/val/cat_breed_classification/:
+total 76K
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Abyssinian
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Bombay
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Bengal
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 British_Shorthair
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Maine_Coon
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Exotic_Shorthair
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Russian_Blue
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Ragdoll
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Persian
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Siamese
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Scottish_Fold
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:09 Sphynx
+drwxr-xr-x 2 bryant bryant 4.0K Oct 29 14:12 American_Shorthair
+drwxr-xr-x 2 bryant bryant  24K Oct 29 16:57 No_Cat
+``` 
+
+
 Use `go run cat_detector.go -i images/` to generate new images in the same directory with a bounding box drawn around the detected cat. Here's an example using images/IMG_9326_beastie.jpg
 ```
 (python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ go run cat_detector.go -i images/IMG_9326_beastie.jpg
@@ -125,7 +164,7 @@ That generates images/IMG_9326_beastie_detected.jpg, which includes a blue bound
 ![Beastie with Bounded Box](images/IMG_9326_beastie_detected.jpg)
 
 
-Example training run for tabby vs cat vs no cat detection:
+The training run for tabby vs cat vs no cat detection:
 ```
 (python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ ./cat_breed_train.py --train_dir data/train/tabby_cat/ --val_dir data/val/tabby_cat/ --save_model_weights models/tabby_cat_resnet50.pth
 class_names = ['cat', 'no_cat', 'tabby_cat']
@@ -161,7 +200,7 @@ Training complete in 787.71 seconds
 Model saved as models/tabby_cat_resnet50.pth
 ```
 
-Example training run for cat breed detection:
+A training run for cat breed detection:
 ```
 (python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ ./cat_breed_train.py --train_dir data/train/cat_breed_classification/ --val_dir data/val/cat_breed_classification/ --save_model_weights models/cat_breed_classification_resnet50.pth --epochs 20
 class_names = ['Abyssinian', 'American_Shorthair', 'Bengal', 'Bombay', 'British_Shorthair', 'Exotic_Shorthair', 'Maine_Coon', 'No_Cat', 'Persian', 'Ragdoll', 'Russian_Blue', 'Scottish_Fold', 'Siamese', 'Sphynx']
@@ -219,9 +258,10 @@ Model saved as models/cat_breed_classification_resnet50.pth
 
 ## Running Cat Detection
 
+This is the preview of photos I have to test against in images directory locally:
 ![images](images/images-preview.png)
 
-Running tabby_detection.py:
+Running `tabby_detection.py ./images` on photos with default `models/tabby_cat_resnet50.pth`:
 ```
 (python-env) bryant@debian:~/git/github.com/brybry192/cat-detector$ ./tabby_detector.py images/ | sort
 cat detected in images/Bengal_101.jpg with probability 0.76
