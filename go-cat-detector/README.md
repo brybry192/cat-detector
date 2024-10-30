@@ -14,7 +14,7 @@ Use [../docker-compose.yaml](../docker-compose.yaml) to bring up the pgvector de
 ```
 cd ../
 docker-compose up
-``
+```
 
 ## Setup Gemeni API Key
 
