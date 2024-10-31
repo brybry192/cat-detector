@@ -2,6 +2,21 @@
 
 Detect a tabby cat or the cat breed using PyTorch.
 
+<img src="images/beastie_and_mac.jpg" alt="Beastie and Mac" width="596" height="376">
+
+  - [Background](#background)
+  - [Setup Virtual Python Environment](#setup-virtual-python-environment)
+  - [Activate python-env](#activate-python-env)
+  - [Install Dependencies](#install-dependencies)
+  - [Converting Images to JPEG](#converting-images-to-jpeg)
+  - [gocv](#gocv)
+  - [Testing](#testing)
+  - [Training Custom Model](#training-custom-model)
+  - [Running Cat Detection](#running-cat-detection)
+  - [curl Examples](#curl-examples)
+
+## Background
+
 We have two indoor cats in our household. Beastie is an American Shorthair with orange and white tabby pattern:
 ![Beastie](images/IMG_9326_beastie.jpg)
 
@@ -12,15 +27,6 @@ They each have their own space, in addition to many shared spaces across the hou
 
 For now I'm just working on the image detection piece using jpg images. This is just an excuse to explore and play with deep learning models for object detection using pytorch and different libraries across Python and Go.
 
-  - [Setup Virtual Python Environment](#setup-virtual-python-environment)
-  - [Activate python-env](#activate-python-env)
-  - [Install Dependencies](#install-dependencies)
-  - [Converting Images to JPEG](#converting-images-to-jpeg)
-  - [gocv](#gocv)
-  - [Testing](#testing)
-  - [Training Custom Model](#training-custom-model)
-  - [Running Cat Detection](#running-cat-detection)
-  - [curl Examples](#curl-examples)
 
 
 ## Setup Virtual Python Environment
