@@ -17,8 +17,10 @@ For now I'm just working on the image detection piece using jpg images. This is 
   - [Install Dependencies](#install-dependencies)
   - [Converting Images to JPEG](#converting-images-to-jpeg)
   - [gocv](#gocv)
+  - [Testing](#testing)
   - [Training Custom Model](#training-custom-model)
   - [Running Cat Detection](#running-cat-detection)
+  - [curl Examples](#curl-examples)
 
 
 ## Setup Virtual Python Environment
@@ -37,7 +39,7 @@ python3 -m venv python-env
 
 ## Activate python-env
 
-Activate the python-env before doing setup or running script::
+`source .env` to activate the python-env before doing setup or running script:
 ```
 source python-env/bin/activate
 ```
@@ -52,7 +54,16 @@ bash Install\ Certificates.command
 
 Install python dependencies with pip:
 ```
-pip install opencv-python numpy==1.26.4 torch torchvision imgbeddings huggingface_hub==0.24 tflite-support psycopg2 Flask
+pip install opencv-python \
+            numpy==1.26.4 \
+            torch \
+            torchvision \
+            imgbeddings \
+            huggingface_hub==0.24 \
+            tflite-support \
+            psycopg2 \
+            Flask \
+            pytest
 ```
 
 ## Converting Images to JPEG
@@ -80,6 +91,19 @@ mkdir ~/git/github.com/opencv
 cd ~/git/github.com/opencv/
 git clone https://github.com/opencv/opencv.git
 ls -l ~/git/github.com/opencv/opencv/data/haarcascades/haarcascade_frontalcatface.xml
+```
+## Testing
+
+
+```
+(python-env) Bryants-MBP:cat-detector bryant$ python -m unittest test_cat_detection.py
+Test with non-cat image response: {'breed': 'No_Cat', 'breed_confidence': 0.9999597072601318, 'is_tabby': False, 'is_tabby_confidence': 0.9984034895896912, 'message': 'No_Cat detected in /tmp/uploaded_image.jpg with probability 1.00'}
+.Test with tabby image response: {'breed': 'American_Shorthair', 'breed_confidence': 0.9996365308761597, 'is_tabby': True, 'is_tabby_confidence': 0.9972027540206909, 'message': 'American_Shorthair detected in /tmp/uploaded_image.jpg with probability 1.00'}
+.
+----------------------------------------------------------------------
+Ran 2 tests in 1.701s
+
+OK
 ```
 
 ## Training Custom Model
@@ -372,5 +396,48 @@ Russian_Blue detected in images/Russian_Blue_101.jpg with probability 1.00
 Siamese detected in images/Siamese_101.jpg with probability 1.00
 ```
 
+## Start HTTP Server
+
+A Flask web server was added. To start it run `cat_breed_detector.py` without a directory or photo passed in as an argument:
+```
+(python-env) Bryants-MBP:cat-detector bryant$ ./cat_breed_detector.py
+ * Tip: There are .env or .flaskenv files present. Do "pip install python-dotenv" to use them.
+ * Serving Flask app 'cat_breed_detector'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8081
+ * Running on http://192.168.1.10:8081
+Press CTRL+C to quit
+```
+
+## curl Examples
+
+With the HTTP Flask server running...
+
+Sending photo without a cat present:
+```
+(python-env) Bryants-MBP:cat-detector bryant$ curl -s -X POST http://localhost:8081/detect_cat -H "Content-Type: application/json" -d '{"image_path": "/Users/bryant/git/github.com/brybry192/cat-detector/images/nature_IMG_9026.jpg"}' | jq .
+{
+  "breed": "No_Cat",
+  "breed_confidence": 0.9999607801437378,
+  "is_tabby": false,
+  "is_tabby_confidence": 0.9984403252601624,
+  "message": "No_Cat detected in /Users/bryant/git/github.com/brybry192/cat-detector/images/nature_IMG_9026.jpg with probability 1.00"
+}
+```
+
+
+Sending photo path with cat, but not a tabby:
+```
+Bryants-MBP:~ bryant$ curl -s -X POST http://localhost:8081/detect_cat -H "Content-Type: application/json" -d '{"image_path": "/Users/bryant/git/github.com/brybry192/cat-detector/images/IMG_3616_mac.jpg"}' | jq .
+{
+  "breed": "Bombay",
+  "breed_confidence": 0.9352094531059265,
+  "is_tabby": false,
+  "is_tabby_confidence": 0.8328012824058533,
+  "message": "Bombay detected in /Users/bryant/git/github.com/brybry192/cat-detector/images/IMG_3616_mac.jpg with probability 0.94"
+}
+```
 
 
